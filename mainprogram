@@ -1,0 +1,82 @@
+//Program to convert a string consisting of a positive integer or a
+//positive decimal number to the numeric format.
+ 
+#include <iostream>
+#include <iomanip>
+#include <string>
+
+#include "linkedStack.h"
+  
+using namespace std; 
+
+int main()
+{
+    linkedStackType<int> digitsStack;
+
+    int intPart;
+    double decimalPart;
+    int numOfDecimalDigits;  //to set the precision
+    double decimalDigit;
+
+    double decimalNum;
+
+    string numString;
+    int numStrLength;
+    int index;
+
+    cout << fixed << showpoint; 
+
+    cout << "Enter a positive number: ";
+    cin >> numString;
+    cout << endl;
+
+    numStrLength = numString.length();
+
+    if (numStrLength > 0)
+    {
+        intPart = 0;
+        index = 0;
+        
+        while (index < numStrLength && numString[index] != '.')
+        {
+            intPart = intPart * 10 + (static_cast<int>(numString[index]) -
+                                      static_cast<int>('0'));
+            index++;
+        }
+
+        decimalPart = 0;
+        numOfDecimalDigits = 0;
+
+        if (index < numStrLength)
+        {
+            index++;
+
+            while (index < numStrLength)
+            {
+                digitsStack.push(static_cast<int>(numString[index]) -
+                                      static_cast<int>('0'));
+                numOfDecimalDigits++;
+                index++;
+            }
+
+            while (!digitsStack.isEmptyStack())
+            {
+                decimalDigit = digitsStack.top();
+                digitsStack.pop();
+
+                decimalPart = decimalPart / 10 + decimalDigit / 10;
+            }
+
+            cout << setprecision(numOfDecimalDigits);
+
+            decimalNum = intPart + decimalPart;
+
+            cout << decimalNum << endl;
+        }
+        else
+            cout << intPart << endl;
+
+    }
+
+    return 0;
+}
